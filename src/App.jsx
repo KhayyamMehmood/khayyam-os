@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -82,12 +83,149 @@ function BootScreen({ messages, step }) {
   )
 }
 
+/* =========================
+   DESKTOP
+========================= */
+
 function Desktop() {
   const [aboutOpen, setAboutOpen] = useState(false)
   const [projectsOpen, setProjectsOpen] = useState(false)
   const [skillsOpen, setSkillsOpen] = useState(false)
   const [resumeOpen, setResumeOpen] = useState(false)
   const [terminalOpen, setTerminalOpen] = useState(false)
+
+  const [icons, setIcons] = useState([
+    {
+      id: "about",
+      name: "About Me",
+      icon: "👤",
+      x: 35,
+      y: 35,
+      action: () => setAboutOpen(true),
+    },
+    {
+      id: "linkedin",
+      name: "LinkedIn",
+      icon: "💼",
+      x: 135,
+      y: 35,
+      action: () =>
+        window.open(
+          "https://www.linkedin.com/in/khayyam-mehmood-691a7b350/",
+          "_blank"
+        ),
+    },
+    {
+      id: "projects",
+      name: "Projects",
+      icon: "📁",
+      x: 35,
+      y: 145,
+      action: () => setProjectsOpen(true),
+    },
+    {
+      id: "skills",
+      name: "Skills",
+      icon: "⚙️",
+      x: 135,
+      y: 145,
+      action: () => setSkillsOpen(true),
+    },
+    {
+      id: "resume",
+      name: "Resume",
+      icon: "📄",
+      x: 35,
+      y: 255,
+      action: () => setResumeOpen(true),
+    },
+    {
+      id: "terminal",
+      name: "Terminal",
+      icon: "💻",
+      x: 135,
+      y: 255,
+      action: () => setTerminalOpen(true),
+    },
+    {
+      id: "github",
+      name: "GitHub",
+      icon: "🐙",
+      x: 35,
+      y: 365,
+      action: () =>
+        window.open(
+          "https://github.com/KhayyamMehmood",
+          "_blank"
+        ),
+    },
+  ])
+
+  const [dragging, setDragging] = useState(null)
+
+  const handleMouseDown = (event, id) => {
+    if (event.button !== 0) {
+      return
+    }
+
+    const icon = icons.find((item) => item.id === id)
+
+    if (!icon) {
+      return
+    }
+
+    setDragging({
+      id,
+      offsetX: event.clientX - icon.x,
+      offsetY: event.clientY - icon.y,
+    })
+  }
+
+  useEffect(() => {
+    const handleMouseMove = (event) => {
+      if (!dragging) {
+        return
+      }
+
+      setIcons((previousIcons) =>
+        previousIcons.map((icon) => {
+          if (icon.id !== dragging.id) {
+            return icon
+          }
+
+          return {
+            ...icon,
+            x: Math.max(
+              10,
+              Math.min(
+                event.clientX - dragging.offsetX,
+                window.innerWidth - 100
+              )
+            ),
+            y: Math.max(
+              10,
+              Math.min(
+                event.clientY - dragging.offsetY,
+                window.innerHeight - 130
+              )
+            ),
+          }
+        })
+      )
+    }
+
+    const handleMouseUp = () => {
+      setDragging(null)
+    }
+
+    window.addEventListener("mousemove", handleMouseMove)
+    window.addEventListener("mouseup", handleMouseUp)
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove)
+      window.removeEventListener("mouseup", handleMouseUp)
+    }
+  }, [dragging])
 
   return (
     <motion.div
@@ -96,107 +234,100 @@ function Desktop() {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
-      <div className="desktop-content">
-        <div className="desktop-icon" onClick={() => setAboutOpen(true)}>
-          <div className="icon">👤</div>
-          <span>About Me</span>
-        </div>
-
-        <div className="desktop-icon" onClick={() => setProjectsOpen(true)}>
-          <div className="icon">📁</div>
-          <span>Projects</span>
-        </div>
-
-        <div className="desktop-icon" onClick={() => setSkillsOpen(true)}>
-          <div className="icon">⚙️</div>
-          <span>Skills</span>
-        </div>
-
-        <div className="desktop-icon" onClick={() => setResumeOpen(true)}>
-          <div className="icon">📄</div>
-          <span>Resume</span>
-        </div>
-
-        <div className="desktop-icon" onClick={() => setTerminalOpen(true)}>
-          <div className="icon">💻</div>
-          <span>Terminal</span>
-        </div>
-
-        {/* GITHUB */}
+      {icons.map((item) => (
         <div
-          className="desktop-icon"
-          onClick={() =>
-            window.open(
-              "https://github.com/KhayyamMehmood",
-              "_blank"
-            )
+          key={item.id}
+          className="desktop-icon draggable-icon"
+          style={{
+            position: "absolute",
+            left: `${item.x}px`,
+            top: `${item.y}px`,
+          }}
+          onMouseDown={(event) =>
+            handleMouseDown(event, item.id)
           }
+          onDoubleClick={item.action}
         >
-          <div className="icon">🐙</div>
-          <span>GitHub</span>
+          <div className="icon">{item.icon}</div>
+          <span>{item.name}</span>
         </div>
-
-        {/* LINKEDIN */}
-        <div
-          className="desktop-icon"
-          onClick={() =>
-            window.open(
-              "https://www.linkedin.com/in/khayyam-mehmood-691a7b350/",
-              "_blank"
-            )
-          }
-        >
-          <div className="icon">💼</div>
-          <span>LinkedIn</span>
-        </div>
-      </div>
+      ))}
 
       <AnimatePresence>
         {aboutOpen && (
-          <AboutWindow onClose={() => setAboutOpen(false)} />
+          <AboutWindow
+            onClose={() => setAboutOpen(false)}
+          />
         )}
       </AnimatePresence>
 
       <AnimatePresence>
         {projectsOpen && (
-          <ProjectsWindow onClose={() => setProjectsOpen(false)} />
+          <ProjectsWindow
+            onClose={() => setProjectsOpen(false)}
+          />
         )}
       </AnimatePresence>
 
       <AnimatePresence>
         {skillsOpen && (
-          <SkillsWindow onClose={() => setSkillsOpen(false)} />
+          <SkillsWindow
+            onClose={() => setSkillsOpen(false)}
+          />
         )}
       </AnimatePresence>
 
       <AnimatePresence>
         {resumeOpen && (
-          <ResumeWindow onClose={() => setResumeOpen(false)} />
+          <ResumeWindow
+            onClose={() => setResumeOpen(false)}
+          />
         )}
       </AnimatePresence>
 
       <AnimatePresence>
         {terminalOpen && (
-          <TerminalWindow onClose={() => setTerminalOpen(false)} />
+          <TerminalWindow
+            onClose={() => setTerminalOpen(false)}
+          />
         )}
       </AnimatePresence>
 
       <div className="taskbar">
         <div className="start-button">K</div>
-        <div className="taskbar-title">KHAYYAM OS</div>
-        <div className="system-info">Online • 2026</div>
+        <div className="taskbar-title">
+          KHAYYAM OS
+        </div>
+        <div className="system-info">
+          Online • 2026
+        </div>
       </div>
     </motion.div>
   )
 }
 
+/* =========================
+   ABOUT
+========================= */
+
 function AboutWindow({ onClose }) {
   return (
     <motion.div
       className="window about-window"
-      initial={{ opacity: 0, scale: 0.9, y: 20 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.9 }}
+      initial={{
+        opacity: 0,
+        scale: 0.9,
+        y: 20,
+      }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+        y: 0,
+      }}
+      exit={{
+        opacity: 0,
+        scale: 0.9,
+      }}
     >
       <div className="window-header">
         <span>About Me</span>
@@ -208,9 +339,15 @@ function AboutWindow({ onClose }) {
           <div className="profile-icon">K</div>
 
           <div>
-            <span className="section-label">USER PROFILE</span>
+            <span className="section-label">
+              USER PROFILE
+            </span>
+
             <h2>Khayyam Mehmood</h2>
-            <p className="about-role">Computer Science Student</p>
+
+            <p className="about-role">
+              Computer Science Student
+            </p>
           </div>
         </div>
 
@@ -218,19 +355,22 @@ function AboutWindow({ onClose }) {
 
         <div className="about-description">
           <p>
-            I'm a Computer Science student at Capital University of Science &
-            Technology with an interest in software development and modern
+            I'm a Computer Science student at Capital
+            University of Science & Technology with an
+            interest in software development and modern
             web technologies.
           </p>
 
           <p>
-            I've worked with technologies including JavaScript, React, Node.js,
-            Express, MongoDB, MySQL, C++ and Python.
+            I've worked with technologies including
+            JavaScript, React, Node.js, Express, MongoDB,
+            MySQL, C++ and Python.
           </p>
 
           <p>
-            I'm focused on building real-world projects, improving my
-            development skills and growing as a software developer.
+            I'm focused on building real-world projects,
+            improving my development skills and growing as
+            a software developer.
           </p>
         </div>
 
@@ -255,6 +395,10 @@ function AboutWindow({ onClose }) {
   )
 }
 
+/* =========================
+   PROJECTS
+========================= */
+
 function ProjectsWindow({ onClose }) {
   const projects = [
     {
@@ -262,23 +406,37 @@ function ProjectsWindow({ onClose }) {
       description:
         "A food delivery web application designed to provide a modern online ordering experience.",
       type: "Web Application",
-      technologies: ["React", "Vite", "Tailwind CSS"],
-      github: "https://github.com/KhayyamMehmood",
+      technologies: [
+        "React",
+        "Vite",
+        "Tailwind CSS",
+      ],
+      github:
+        "https://github.com/KhayyamMehmood",
     },
     {
       name: "Hayal Travel",
       description:
         "A travel and ticket booking web application built as a practical web development project.",
       type: "Web Application",
-      technologies: ["React", "JavaScript", "Tailwind CSS"],
-      github: "https://github.com/KhayyamMehmood",
+      technologies: [
+        "React",
+        "JavaScript",
+        "Tailwind CSS",
+      ],
+      github:
+        "https://github.com/KhayyamMehmood",
     },
     {
       name: "Home Care Services",
       description:
         "A real-world website developed for a home care service.",
       type: "Web Development",
-      technologies: ["HTML", "CSS", "JavaScript"],
+      technologies: [
+        "HTML",
+        "CSS",
+        "JavaScript",
+      ],
       github:
         "https://github.com/KhayyamMehmood/home-care-services",
     },
@@ -287,7 +445,11 @@ function ProjectsWindow({ onClose }) {
       description:
         "A book-focused website developed during internship practice.",
       type: "Web Development",
-      technologies: ["HTML", "CSS", "JavaScript"],
+      technologies: [
+        "HTML",
+        "CSS",
+        "JavaScript",
+      ],
       github:
         "https://github.com/KhayyamMehmood/book-nest",
     },
@@ -296,9 +458,20 @@ function ProjectsWindow({ onClose }) {
   return (
     <motion.div
       className="window projects-window"
-      initial={{ opacity: 0, scale: 0.9, y: 20 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.9 }}
+      initial={{
+        opacity: 0,
+        scale: 0.9,
+        y: 20,
+      }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+        y: 0,
+      }}
+      exit={{
+        opacity: 0,
+        scale: 0.9,
+      }}
     >
       <div className="window-header">
         <span>Projects</span>
@@ -307,9 +480,15 @@ function ProjectsWindow({ onClose }) {
 
       <div className="window-content">
         <div className="projects-heading">
-          <span className="section-label">PORTFOLIO</span>
+          <span className="section-label">
+            PORTFOLIO
+          </span>
+
           <h2>Selected Projects</h2>
-          <p>A collection of things I've built.</p>
+
+          <p>
+            A collection of things I've built.
+          </p>
         </div>
 
         <div className="projects-grid">
@@ -317,10 +496,20 @@ function ProjectsWindow({ onClose }) {
             <motion.div
               className="project-card"
               key={project.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.12 }}
-              whileHover={{ y: -5 }}
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                delay: index * 0.12,
+              }}
+              whileHover={{
+                y: -5,
+              }}
             >
               <div className="project-number">
                 0{index + 1}
@@ -335,15 +524,22 @@ function ProjectsWindow({ onClose }) {
               <p>{project.description}</p>
 
               <div className="technologies">
-                {project.technologies.map((tech) => (
-                  <span key={tech}>{tech}</span>
-                ))}
+                {project.technologies.map(
+                  (tech) => (
+                    <span key={tech}>
+                      {tech}
+                    </span>
+                  )
+                )}
               </div>
 
               <button
                 className="github-button"
                 onClick={() =>
-                  window.open(project.github, "_blank")
+                  window.open(
+                    project.github,
+                    "_blank"
+                  )
                 }
               >
                 GitHub →
@@ -355,6 +551,10 @@ function ProjectsWindow({ onClose }) {
     </motion.div>
   )
 }
+
+/* =========================
+   SKILLS
+========================= */
 
 function SkillsWindow({ onClose }) {
   const skillCategories = [
@@ -371,32 +571,62 @@ function SkillsWindow({ onClose }) {
     },
     {
       name: "Backend",
-      skills: ["Node.js", "Express.js"],
+      skills: [
+        "Node.js",
+        "Express.js",
+      ],
     },
     {
       name: "Databases",
-      skills: ["MySQL", "MongoDB", "Firebase"],
+      skills: [
+        "MySQL",
+        "MongoDB",
+        "Firebase",
+      ],
     },
     {
       name: "Languages",
-      skills: ["JavaScript", "C++", "Python"],
+      skills: [
+        "JavaScript",
+        "C++",
+        "Python",
+      ],
     },
     {
       name: "Tools",
-      skills: ["Git", "GitHub", "Vite", "Netlify"],
+      skills: [
+        "Git",
+        "GitHub",
+        "Vite",
+        "Netlify",
+      ],
     },
     {
       name: "Other",
-      skills: ["Flutter", "Dart"],
+      skills: [
+        "Flutter",
+        "Dart",
+      ],
     },
   ]
 
   return (
     <motion.div
       className="window skills-window"
-      initial={{ opacity: 0, scale: 0.9, y: 20 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.9 }}
+      initial={{
+        opacity: 0,
+        scale: 0.9,
+        y: 20,
+      }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+        y: 0,
+      }}
+      exit={{
+        opacity: 0,
+        scale: 0.9,
+      }}
     >
       <div className="window-header">
         <span>Skills</span>
@@ -409,7 +639,9 @@ function SkillsWindow({ onClose }) {
             TECHNICAL PROFILE
           </span>
 
-          <h2>Skills & Technologies</h2>
+          <h2>
+            Skills & Technologies
+          </h2>
 
           <p>
             Technologies and tools I've worked with.
@@ -422,10 +654,17 @@ function SkillsWindow({ onClose }) {
               <motion.div
                 className="skill-category"
                 key={category.name}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{
+                  opacity: 0,
+                  y: 20,
+                }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                }}
                 transition={{
-                  delay: categoryIndex * 0.08,
+                  delay:
+                    categoryIndex * 0.08,
                 }}
               >
                 <div className="skill-category-header">
@@ -452,10 +691,14 @@ function SkillsWindow({ onClose }) {
                         }}
                         transition={{
                           delay:
-                            categoryIndex * 0.08 +
-                            skillIndex * 0.04,
+                            categoryIndex *
+                              0.08 +
+                            skillIndex *
+                              0.04,
                         }}
-                        whileHover={{ x: 4 }}
+                        whileHover={{
+                          x: 4,
+                        }}
                       >
                         <span className="skill-dot">
                           +
@@ -475,13 +718,28 @@ function SkillsWindow({ onClose }) {
   )
 }
 
+/* =========================
+   RESUME
+========================= */
+
 function ResumeWindow({ onClose }) {
   return (
     <motion.div
       className="window resume-window"
-      initial={{ opacity: 0, scale: 0.9, y: 20 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.9 }}
+      initial={{
+        opacity: 0,
+        scale: 0.9,
+        y: 20,
+      }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+        y: 0,
+      }}
+      exit={{
+        opacity: 0,
+        scale: 0.9,
+      }}
     >
       <div className="window-header">
         <span>Resume</span>
@@ -490,7 +748,9 @@ function ResumeWindow({ onClose }) {
 
       <div className="window-content resume-content">
         <div className="resume-heading">
-          <span className="section-label">DOCUMENT</span>
+          <span className="section-label">
+            DOCUMENT
+          </span>
 
           <h2>My Resume</h2>
 
@@ -505,10 +765,14 @@ function ResumeWindow({ onClose }) {
             <div className="resume-paper-header">
               <div>
                 <h1>KHAYYAM MEHMOOD</h1>
-                <p>Computer Science Student</p>
+                <p>
+                  Computer Science Student
+                </p>
               </div>
 
-              <div className="resume-initial">K</div>
+              <div className="resume-initial">
+                K
+              </div>
             </div>
 
             <div className="resume-contact">
@@ -532,12 +796,12 @@ function ResumeWindow({ onClose }) {
 
               <p>
                 Computer Science student at Capital
-                University of Science & Technology with
-                hands-on experience developing web
-                applications using modern frontend and
-                backend technologies. Interested in software
-                development, problem solving and building
-                practical digital products.
+                University of Science & Technology
+                with hands-on experience developing
+                web applications using modern frontend
+                and backend technologies. Interested in
+                software development, problem solving
+                and building practical digital products.
               </p>
             </div>
 
@@ -546,7 +810,8 @@ function ResumeWindow({ onClose }) {
 
               <div className="resume-entry">
                 <strong>
-                  Bachelor of Science in Computer Science
+                  Bachelor of Science in Computer
+                  Science
                 </strong>
 
                 <p>
@@ -560,10 +825,11 @@ function ResumeWindow({ onClose }) {
               <h3>TECHNICAL SKILLS</h3>
 
               <p>
-                JavaScript • React • HTML • CSS • Tailwind
-                CSS • Bootstrap • Node.js • Express.js •
-                MySQL • MongoDB • Firebase • C++ • Python •
-                Git • GitHub • Vite • Flutter • Dart
+                JavaScript • React • HTML • CSS •
+                Tailwind CSS • Bootstrap • Node.js •
+                Express.js • MySQL • MongoDB • Firebase
+                • C++ • Python • Git • GitHub • Vite •
+                Flutter • Dart
               </p>
             </div>
 
@@ -574,8 +840,8 @@ function ResumeWindow({ onClose }) {
                 <strong>Khaanakart</strong>
 
                 <p>
-                  Food delivery web application focused on
-                  providing a modern online ordering
+                  Food delivery web application focused
+                  on providing a modern online ordering
                   experience.
                 </p>
               </div>
@@ -584,17 +850,20 @@ function ResumeWindow({ onClose }) {
                 <strong>Hayal Travel</strong>
 
                 <p>
-                  Travel and ticket booking web application
-                  built as a practical development project.
+                  Travel and ticket booking web
+                  application built as a practical
+                  development project.
                 </p>
               </div>
 
               <div className="resume-entry">
-                <strong>Home Care Services</strong>
+                <strong>
+                  Home Care Services
+                </strong>
 
                 <p>
-                  Real-world website developed for a home
-                  care service.
+                  Real-world website developed for a
+                  home care service.
                 </p>
               </div>
 
@@ -659,6 +928,10 @@ function ResumeWindow({ onClose }) {
     </motion.div>
   )
 }
+
+/* =========================
+   TERMINAL
+========================= */
 
 function TerminalWindow({ onClose }) {
   const [history, setHistory] = useState([
@@ -839,12 +1112,16 @@ function TerminalWindow({ onClose }) {
         opacity: 0,
         scale: 0.9,
       }}
-      onClick={() => inputRef.current?.focus()}
+      onClick={() =>
+        inputRef.current?.focus()
+      }
     >
       <div className="window-header terminal-header">
         <span>Terminal</span>
 
-        <button onClick={onClose}>×</button>
+        <button onClick={onClose}>
+          ×
+        </button>
       </div>
 
       <div className="terminal-body">
@@ -869,11 +1146,13 @@ function TerminalWindow({ onClose }) {
                 {item.text}
               </span>
             ) : (
-              item.text.map((line, lineIndex) => (
-                <div key={lineIndex}>
-                  {line || "\u00A0"}
-                </div>
-              ))
+              item.text.map(
+                (line, lineIndex) => (
+                  <div key={lineIndex}>
+                    {line || "\u00A0"}
+                  </div>
+                )
+              )
             )}
           </div>
         ))}
