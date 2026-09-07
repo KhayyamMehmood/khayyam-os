@@ -44,6 +44,53 @@ function App() {
   )
 }
 
+/* =========================
+   ARC REACTOR
+========================= */
+
+function ArcReactor() {
+  return (
+    <div className="arc-reactor" aria-hidden="true">
+      <div className="reactor-housing">
+        <div className="housing-cut cut-1"></div>
+        <div className="housing-cut cut-2"></div>
+        <div className="housing-cut cut-3"></div>
+        <div className="housing-cut cut-4"></div>
+      </div>
+
+      <div className="reactor-ring outer-ring"></div>
+
+      <div className="reactor-ring outer-ring-2"></div>
+
+      <div className="reactor-segments"></div>
+
+      <div className="reactor-ring inner-ring"></div>
+
+      <div className="reactor-plate">
+        <div className="reactor-bolts">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div className="reactor-triangle">
+          <div className="triangle-inner"></div>
+          <div className="triangle-light"></div>
+        </div>
+
+        <div className="reactor-center"></div>
+      </div>
+    </div>
+  )
+}
+
+/* =========================
+   BOOT SCREEN
+========================= */
+
 function BootScreen({ messages, step }) {
   return (
     <motion.div
@@ -52,33 +99,63 @@ function BootScreen({ messages, step }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 1 }}
     >
-      <motion.h1
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        KHAYYAM OS
-      </motion.h1>
+      <ArcReactor />
 
-      <div className="boot-messages">
-        {messages.slice(0, step).map((message) => (
-          <motion.p
-            key={message}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            {">"} {message}
-          </motion.p>
-        ))}
+      <div className="boot-content">
+        <motion.h1
+          className="boot-title"
+          initial={{
+            opacity: 0,
+            y: 10,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 1,
+            delay: 0.7,
+          }}
+        >
+          KHAYYAM OS
+        </motion.h1>
+
+        <motion.p
+          className="boot-subtitle"
+          initial={{
+            opacity: 0,
+          }}
+          animate={{
+            opacity: 1,
+          }}
+          transition={{
+            duration: 1,
+            delay: 1,
+          }}
+        >
+          PERSONAL OPERATING SYSTEM
+        </motion.p>
+
+        <div className="boot-messages">
+          {messages.slice(0, step).map((message) => (
+            <motion.p
+              key={message}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              {">"} {message}
+            </motion.p>
+          ))}
+        </div>
+
+        <motion.div
+          className="loading-bar"
+          initial={{ width: 0 }}
+          animate={{
+            width: `${(step / messages.length) * 100}%`,
+          }}
+        />
       </div>
-
-      <motion.div
-        className="loading-bar"
-        initial={{ width: 0 }}
-        animate={{
-          width: `${(step / messages.length) * 100}%`,
-        }}
-      />
     </motion.div>
   )
 }
@@ -103,6 +180,7 @@ function Desktop() {
       y: 35,
       action: () => setAboutOpen(true),
     },
+
     {
       id: "linkedin",
       name: "LinkedIn",
@@ -115,6 +193,7 @@ function Desktop() {
           "_blank"
         ),
     },
+
     {
       id: "projects",
       name: "Projects",
@@ -123,6 +202,7 @@ function Desktop() {
       y: 145,
       action: () => setProjectsOpen(true),
     },
+
     {
       id: "skills",
       name: "Skills",
@@ -131,6 +211,7 @@ function Desktop() {
       y: 145,
       action: () => setSkillsOpen(true),
     },
+
     {
       id: "resume",
       name: "Resume",
@@ -139,6 +220,7 @@ function Desktop() {
       y: 255,
       action: () => setResumeOpen(true),
     },
+
     {
       id: "terminal",
       name: "Terminal",
@@ -147,6 +229,7 @@ function Desktop() {
       y: 255,
       action: () => setTerminalOpen(true),
     },
+
     {
       id: "github",
       name: "GitHub",
@@ -195,6 +278,7 @@ function Desktop() {
 
           return {
             ...icon,
+
             x: Math.max(
               10,
               Math.min(
@@ -202,6 +286,7 @@ function Desktop() {
                 window.innerWidth - 100
               )
             ),
+
             y: Math.max(
               10,
               Math.min(
@@ -246,9 +331,12 @@ function Desktop() {
           onMouseDown={(event) =>
             handleMouseDown(event, item.id)
           }
-          onDoubleClick={item.action}
+          onClick={item.action}
         >
-          <div className="icon">{item.icon}</div>
+          <div className="icon">
+            {item.icon}
+          </div>
+
           <span>{item.name}</span>
         </div>
       ))}
@@ -294,10 +382,14 @@ function Desktop() {
       </AnimatePresence>
 
       <div className="taskbar">
-        <div className="start-button">K</div>
+        <div className="start-button">
+          K
+        </div>
+
         <div className="taskbar-title">
           KHAYYAM OS
         </div>
+
         <div className="system-info">
           Online • 2026
         </div>
@@ -331,19 +423,26 @@ function AboutWindow({ onClose }) {
     >
       <div className="window-header">
         <span>About Me</span>
-        <button onClick={onClose}>×</button>
+
+        <button onClick={onClose}>
+          ×
+        </button>
       </div>
 
       <div className="window-content about-content">
         <div className="about-top">
-          <div className="profile-icon">K</div>
+          <div className="profile-icon">
+            K
+          </div>
 
           <div>
             <span className="section-label">
               USER PROFILE
             </span>
 
-            <h2>Khayyam Mehmood</h2>
+            <h2>
+              Khayyam Mehmood
+            </h2>
 
             <p className="about-role">
               Computer Science Student
@@ -377,17 +476,26 @@ function AboutWindow({ onClose }) {
         <div className="about-stats">
           <div className="about-stat">
             <span>DEGREE</span>
-            <strong>BS Computer Science</strong>
+
+            <strong>
+              BS Computer Science
+            </strong>
           </div>
 
           <div className="about-stat">
             <span>FOCUS</span>
-            <strong>Software Development</strong>
+
+            <strong>
+              Software Development
+            </strong>
           </div>
 
           <div className="about-stat">
             <span>STATUS</span>
-            <strong>Open to Opportunities</strong>
+
+            <strong>
+              Open to Opportunities
+            </strong>
           </div>
         </div>
       </div>
@@ -403,53 +511,72 @@ function ProjectsWindow({ onClose }) {
   const projects = [
     {
       name: "Khaanakart",
+
       description:
         "A food delivery web application designed to provide a modern online ordering experience.",
+
       type: "Web Application",
+
       technologies: [
         "React",
         "Vite",
         "Tailwind CSS",
       ],
+
       github:
         "https://github.com/KhayyamMehmood",
     },
+
     {
       name: "Hayal Travel",
+
       description:
         "A travel and ticket booking web application built as a practical web development project.",
+
       type: "Web Application",
+
       technologies: [
         "React",
         "JavaScript",
         "Tailwind CSS",
       ],
+
       github:
         "https://github.com/KhayyamMehmood",
     },
+
     {
       name: "Home Care Services",
+
       description:
         "A real-world website developed for a home care service.",
+
       type: "Web Development",
+
       technologies: [
         "HTML",
         "CSS",
         "JavaScript",
       ],
+
       github:
         "https://github.com/KhayyamMehmood/home-care-services",
     },
+
     {
       name: "Book Nest",
+
       description:
         "A book-focused website developed during internship practice.",
+
       type: "Web Development",
+
       technologies: [
         "HTML",
         "CSS",
         "JavaScript",
       ],
+
       github:
         "https://github.com/KhayyamMehmood/book-nest",
     },
@@ -475,7 +602,10 @@ function ProjectsWindow({ onClose }) {
     >
       <div className="window-header">
         <span>Projects</span>
-        <button onClick={onClose}>×</button>
+
+        <button onClick={onClose}>
+          ×
+        </button>
       </div>
 
       <div className="window-content">
@@ -484,7 +614,9 @@ function ProjectsWindow({ onClose }) {
             PORTFOLIO
           </span>
 
-          <h2>Selected Projects</h2>
+          <h2>
+            Selected Projects
+          </h2>
 
           <p>
             A collection of things I've built.
@@ -519,9 +651,13 @@ function ProjectsWindow({ onClose }) {
                 {project.type}
               </div>
 
-              <h3>{project.name}</h3>
+              <h3>
+                {project.name}
+              </h3>
 
-              <p>{project.description}</p>
+              <p>
+                {project.description}
+              </p>
 
               <div className="technologies">
                 {project.technologies.map(
@@ -560,6 +696,7 @@ function SkillsWindow({ onClose }) {
   const skillCategories = [
     {
       name: "Frontend",
+
       skills: [
         "HTML",
         "CSS",
@@ -569,31 +706,39 @@ function SkillsWindow({ onClose }) {
         "Tailwind CSS",
       ],
     },
+
     {
       name: "Backend",
+
       skills: [
         "Node.js",
         "Express.js",
       ],
     },
+
     {
       name: "Databases",
+
       skills: [
         "MySQL",
         "MongoDB",
         "Firebase",
       ],
     },
+
     {
       name: "Languages",
+
       skills: [
         "JavaScript",
         "C++",
         "Python",
       ],
     },
+
     {
       name: "Tools",
+
       skills: [
         "Git",
         "GitHub",
@@ -601,8 +746,10 @@ function SkillsWindow({ onClose }) {
         "Netlify",
       ],
     },
+
     {
       name: "Other",
+
       skills: [
         "Flutter",
         "Dart",
@@ -630,7 +777,10 @@ function SkillsWindow({ onClose }) {
     >
       <div className="window-header">
         <span>Skills</span>
-        <button onClick={onClose}>×</button>
+
+        <button onClick={onClose}>
+          ×
+        </button>
       </div>
 
       <div className="window-content">
@@ -672,7 +822,9 @@ function SkillsWindow({ onClose }) {
                     0{categoryIndex + 1}
                   </span>
 
-                  <h3>{category.name}</h3>
+                  <h3>
+                    {category.name}
+                  </h3>
                 </div>
 
                 <div className="skill-list">
@@ -704,7 +856,9 @@ function SkillsWindow({ onClose }) {
                           +
                         </span>
 
-                        <span>{skill}</span>
+                        <span>
+                          {skill}
+                        </span>
                       </motion.div>
                     )
                   )}
@@ -743,7 +897,10 @@ function ResumeWindow({ onClose }) {
     >
       <div className="window-header">
         <span>Resume</span>
-        <button onClick={onClose}>×</button>
+
+        <button onClick={onClose}>
+          ×
+        </button>
       </div>
 
       <div className="window-content resume-content">
@@ -752,7 +909,9 @@ function ResumeWindow({ onClose }) {
             DOCUMENT
           </span>
 
-          <h2>My Resume</h2>
+          <h2>
+            My Resume
+          </h2>
 
           <p>
             A professional overview of my education,
@@ -764,7 +923,10 @@ function ResumeWindow({ onClose }) {
           <div className="resume-paper">
             <div className="resume-paper-header">
               <div>
-                <h1>KHAYYAM MEHMOOD</h1>
+                <h1>
+                  KHAYYAM MEHMOOD
+                </h1>
+
                 <p>
                   Computer Science Student
                 </p>
@@ -792,7 +954,9 @@ function ResumeWindow({ onClose }) {
             <div className="resume-line" />
 
             <div className="resume-section">
-              <h3>PROFILE</h3>
+              <h3>
+                PROFILE
+              </h3>
 
               <p>
                 Computer Science student at Capital
@@ -806,7 +970,9 @@ function ResumeWindow({ onClose }) {
             </div>
 
             <div className="resume-section">
-              <h3>EDUCATION</h3>
+              <h3>
+                EDUCATION
+              </h3>
 
               <div className="resume-entry">
                 <strong>
@@ -822,7 +988,9 @@ function ResumeWindow({ onClose }) {
             </div>
 
             <div className="resume-section">
-              <h3>TECHNICAL SKILLS</h3>
+              <h3>
+                TECHNICAL SKILLS
+              </h3>
 
               <p>
                 JavaScript • React • HTML • CSS •
@@ -834,10 +1002,14 @@ function ResumeWindow({ onClose }) {
             </div>
 
             <div className="resume-section">
-              <h3>PROJECTS</h3>
+              <h3>
+                PROJECTS
+              </h3>
 
               <div className="resume-entry">
-                <strong>Khaanakart</strong>
+                <strong>
+                  Khaanakart
+                </strong>
 
                 <p>
                   Food delivery web application focused
@@ -847,7 +1019,9 @@ function ResumeWindow({ onClose }) {
               </div>
 
               <div className="resume-entry">
-                <strong>Hayal Travel</strong>
+                <strong>
+                  Hayal Travel
+                </strong>
 
                 <p>
                   Travel and ticket booking web
@@ -868,7 +1042,9 @@ function ResumeWindow({ onClose }) {
               </div>
 
               <div className="resume-entry">
-                <strong>Book Nest</strong>
+                <strong>
+                  Book Nest
+                </strong>
 
                 <p>
                   Book-focused website developed during
@@ -878,7 +1054,9 @@ function ResumeWindow({ onClose }) {
             </div>
 
             <div className="resume-section">
-              <h3>GITHUB</h3>
+              <h3>
+                GITHUB
+              </h3>
 
               <p>
                 github.com/KhayyamMehmood
@@ -937,6 +1115,7 @@ function TerminalWindow({ onClose }) {
   const [history, setHistory] = useState([
     {
       type: "output",
+
       text: [
         "KHAYYAM OS Terminal v1.0",
         "Type 'help' to see available commands.",
@@ -945,6 +1124,7 @@ function TerminalWindow({ onClose }) {
   ])
 
   const [input, setInput] = useState("")
+
   const inputRef = useRef(null)
 
   useEffect(() => {
@@ -1014,7 +1194,7 @@ function TerminalWindow({ onClose }) {
       "User:      Khayyam Mehmood",
       "Shell:     KHAYYAM Terminal",
       "Degree:    BS Computer Science",
-      "University:CUST",
+      "University: CUST",
       "Focus:     Software Development",
       "Frontend:  React / Tailwind CSS",
       "Backend:   Node.js / Express",
@@ -1022,9 +1202,17 @@ function TerminalWindow({ onClose }) {
       "Status:    Open to Opportunities",
     ],
 
-    github: ["Opening GitHub..."],
-    linkedin: ["Opening LinkedIn..."],
-    email: ["Opening email client..."],
+    github: [
+      "Opening GitHub...",
+    ],
+
+    linkedin: [
+      "Opening LinkedIn...",
+    ],
+
+    email: [
+      "Opening email client...",
+    ],
   }
 
   const handleCommand = (event) => {
@@ -1037,6 +1225,7 @@ function TerminalWindow({ onClose }) {
     if (!command) {
       setHistory((previous) => [
         ...previous,
+
         {
           type: "command",
           text: "",
@@ -1044,12 +1233,14 @@ function TerminalWindow({ onClose }) {
       ])
 
       setInput("")
+
       return
     }
 
     if (command === "clear") {
       setHistory([])
       setInput("")
+
       return
     }
 
@@ -1078,12 +1269,15 @@ function TerminalWindow({ onClose }) {
 
     setHistory((previous) => [
       ...previous,
+
       {
         type: "command",
         text: command,
       },
+
       {
         type: "output",
+
         text:
           output || [
             `Command not found: ${command}`,
@@ -1117,7 +1311,9 @@ function TerminalWindow({ onClose }) {
       }
     >
       <div className="window-header terminal-header">
-        <span>Terminal</span>
+        <span>
+          Terminal
+        </span>
 
         <button onClick={onClose}>
           ×

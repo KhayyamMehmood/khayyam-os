@@ -22,11 +22,50 @@ body {
   justify-content: center;
   align-items: center;
   background: #050505;
+
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* BOOT CONTENT - ALWAYS IN FRONT */
+
+.boot-content {
+  position: relative;
+  z-index: 100;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  isolation: isolate;
+}
+
+.boot-title,
+.boot-subtitle,
+.boot-messages,
+.boot-messages p,
+.loading-bar {
+  position: relative;
+  z-index: 101;
 }
 
 .boot-screen h1 {
   font-size: 48px;
   letter-spacing: 8px;
+  margin-bottom: 35px;
+
+  color: white;
+  font-weight: 700;
+}
+
+.boot-subtitle {
+  color: white;
+  font-size: 12px;
+  letter-spacing: 4px;
+  font-weight: 700;
+
+  margin-top: -20px;
   margin-bottom: 35px;
 }
 
@@ -36,8 +75,9 @@ body {
 }
 
 .boot-messages p {
-  color: #888;
+  color: white;
   font-size: 14px;
+  font-weight: 700;
   margin: 8px 0;
 }
 
@@ -48,12 +88,441 @@ body {
   margin-top: 25px;
 }
 
+/* =========================
+   ARC REACTOR
+========================= */
+
+.arc-reactor {
+  position: absolute;
+
+  width: 390px;
+  height: 390px;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  z-index: 0;
+
+  opacity: 0.5;
+
+  pointer-events: none;
+}
+
+.arc-reactor::before {
+  content: "";
+
+  position: absolute;
+
+  inset: -35px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(220, 250, 255, 0.35) 0%,
+      rgba(70, 190, 255, 0.18) 18%,
+      rgba(0, 130, 255, 0.06) 42%,
+      transparent 70%
+    );
+
+  filter: blur(14px);
+
+  opacity: 0.5;
+
+  z-index: -1;
+}
+
+/* REACTOR HOUSING */
+
+.reactor-housing {
+  position: absolute;
+
+  inset: 28px;
+
+  border:
+    2px solid
+    rgba(150, 170, 185, 0.3);
+
+  border-radius: 50%;
+
+  box-shadow:
+    inset 0 0 20px rgba(0, 0, 0, 0.8),
+    0 0 15px rgba(80, 180, 255, 0.1);
+}
+
+.housing-cut {
+  position: absolute;
+
+  width: 28px;
+  height: 7px;
+
+  background: #050505;
+
+  border:
+    1px solid
+    rgba(160, 180, 190, 0.25);
+}
+
+.cut-1 {
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.cut-2 {
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.cut-3 {
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.cut-4 {
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+}
+
+/* OUTER RINGS */
+
+.reactor-ring {
+  position: absolute;
+
+  border-radius: 50%;
+
+  left: 50%;
+  top: 50%;
+}
+
+.outer-ring {
+  width: 300px;
+  height: 300px;
+
+  margin-left: -150px;
+  margin-top: -150px;
+
+  border:
+    2px solid
+    rgba(120, 170, 195, 0.28);
+
+  border-top-color:
+    rgba(120, 210, 255, 0.65);
+
+  border-right-color:
+    rgba(120, 210, 255, 0.2);
+
+  animation:
+    reactorSpin 16s linear infinite;
+}
+
+.outer-ring-2 {
+  width: 275px;
+  height: 275px;
+
+  margin-left: -137.5px;
+  margin-top: -137.5px;
+
+  border:
+    1px dashed
+    rgba(120, 190, 220, 0.3);
+
+  animation:
+    reactorSpinReverse 20s linear infinite;
+}
+
+/* SEGMENTED RING */
+
+.reactor-segments {
+  position: absolute;
+
+  width: 245px;
+  height: 245px;
+
+  left: 72.5px;
+  top: 72.5px;
+
+  border-radius: 50%;
+
+  border:
+    10px dotted
+    rgba(100, 180, 220, 0.28);
+
+  animation:
+    reactorSpin 24s linear infinite;
+}
+
+/* INNER RING */
+
+.inner-ring {
+  width: 205px;
+  height: 205px;
+
+  margin-left: -102.5px;
+  margin-top: -102.5px;
+
+  border:
+    2px solid
+    rgba(120, 215, 255, 0.35);
+
+  box-shadow:
+    0 0 12px
+    rgba(60, 190, 255, 0.12);
+
+  animation:
+    reactorSpinReverse 12s linear infinite;
+}
+
+/* INNER PLATE */
+
+.reactor-plate {
+  position: absolute;
+
+  width: 180px;
+  height: 180px;
+
+  left: 105px;
+  top: 105px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(30, 40, 48, 0.95),
+      rgba(8, 12, 15, 0.98)
+    );
+
+  border:
+    2px solid
+    rgba(130, 160, 175, 0.3);
+
+  box-shadow:
+    inset 0 0 25px rgba(0, 0, 0, 0.9),
+    0 0 15px rgba(70, 180, 230, 0.1);
+}
+
+/* BOLTS */
+
+.reactor-bolts span {
+  position: absolute;
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #4e5b63;
+
+  border:
+    1px solid
+    #87949c;
+
+  box-shadow:
+    0 0 4px
+    rgba(120, 190, 220, 0.2);
+}
+
+.reactor-bolts span:nth-child(1) {
+  top: 9%;
+  left: 47%;
+}
+
+.reactor-bolts span:nth-child(2) {
+  top: 27%;
+  right: 9%;
+}
+
+.reactor-bolts span:nth-child(3) {
+  bottom: 27%;
+  right: 9%;
+}
+
+.reactor-bolts span:nth-child(4) {
+  bottom: 9%;
+  left: 47%;
+}
+
+.reactor-bolts span:nth-child(5) {
+  bottom: 27%;
+  left: 9%;
+}
+
+.reactor-bolts span:nth-child(6) {
+  top: 27%;
+  left: 9%;
+}
+
+/* =========================
+   CENTERED TRIANGLE
+========================= */
+
+.reactor-triangle {
+  position: absolute;
+
+  width: 125px;
+  height: 125px;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  clip-path:
+    polygon(
+      50% 0%,
+      100% 100%,
+      0% 100%
+    );
+
+  background:
+    rgba(80, 185, 225, 0.32);
+
+  filter:
+    drop-shadow(
+      0 0 8px
+      rgba(70, 200, 255, 0.3)
+    );
+}
+
+/* TRIANGLE INNER */
+
+.triangle-inner {
+  position: absolute;
+
+  inset: 8px;
+
+  clip-path:
+    polygon(
+      50% 0%,
+      100% 100%,
+      0% 100%
+    );
+
+  background: #071017;
+}
+
+/* TRIANGLE LIGHT */
+
+.triangle-light {
+  position: absolute;
+
+  inset: 22px;
+
+  clip-path:
+    polygon(
+      50% 0%,
+      100% 100%,
+      0% 100%
+    );
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(210, 250, 255, 0.8),
+      rgba(50, 190, 255, 0.45)
+    );
+
+  animation:
+    reactorPulse 2.5s ease-in-out infinite;
+}
+
+/* CENTER CORE */
+
+.reactor-center {
+  position: absolute;
+
+  width: 38px;
+  height: 38px;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background: #eaffff;
+
+  box-shadow:
+    0 0 6px
+      rgba(255, 255, 255, 0.65),
+
+    0 0 16px
+      rgba(70, 210, 255, 0.45),
+
+    0 0 35px
+      rgba(0, 130, 255, 0.3);
+
+  animation:
+    reactorCorePulse 2s ease-in-out infinite;
+}
+
+/* REACTOR ANIMATIONS */
+
+@keyframes reactorSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes reactorSpinReverse {
+  from {
+    transform: rotate(360deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes reactorPulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 0.75;
+  }
+}
+
+@keyframes reactorCorePulse {
+  0%,
+  100% {
+    transform:
+      translate(-50%, -50%)
+      scale(0.9);
+
+    opacity: 0.7;
+  }
+
+  50% {
+    transform:
+      translate(-50%, -50%)
+      scale(1.08);
+
+    opacity: 1;
+  }
+}
+
 /* DESKTOP */
 
 .desktop {
   height: 100vh;
   width: 100%;
   position: relative;
+
   background:
     radial-gradient(
       circle at 50% 40%,
@@ -65,11 +534,15 @@ body {
 
 .desktop-content {
   position: absolute;
+
   top: 35px;
   left: 35px;
 
   display: grid;
-  grid-template-columns: repeat(2, 90px);
+
+  grid-template-columns:
+    repeat(2, 90px);
+
   grid-auto-rows: 95px;
 
   gap: 20px 18px;
@@ -82,15 +555,21 @@ body {
   height: 95px;
 
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
+
   justify-content: flex-start;
 
   text-align: center;
+
   cursor: pointer;
+
   user-select: none;
 
   padding: 5px;
+
   border-radius: 10px;
 
   transition:
@@ -99,24 +578,32 @@ body {
 }
 
 .desktop-icon:hover {
-  background: rgba(255, 255, 255, 0.06);
-  transform: translateY(-2px);
+  background:
+    rgba(255, 255, 255, 0.06);
+
+  transform:
+    translateY(-2px);
 }
 
 .icon {
   font-size: 38px;
+
   margin-bottom: 8px;
 
-  transition: transform 0.2s;
+  transition:
+    transform 0.2s;
 }
 
 .desktop-icon:hover .icon {
-  transform: scale(1.12);
+  transform:
+    scale(1.12);
 }
 
 .desktop-icon span {
   font-size: 11px;
+
   color: #ddd;
+
   white-space: nowrap;
 }
 
@@ -124,6 +611,7 @@ body {
 
 .taskbar {
   position: absolute;
+
   bottom: 0;
   left: 0;
 
@@ -131,14 +619,19 @@ body {
   height: 58px;
 
   display: flex;
+
   align-items: center;
 
   padding: 0 20px;
 
-  background: rgba(15, 15, 15, 0.85);
+  background:
+    rgba(15, 15, 15, 0.85);
+
   backdrop-filter: blur(20px);
 
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top:
+    1px solid
+    rgba(255, 255, 255, 0.08);
 }
 
 .start-button {
@@ -146,26 +639,33 @@ body {
   height: 38px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
   border-radius: 10px;
 
-  background: rgba(255, 255, 255, 0.1);
+  background:
+    rgba(255, 255, 255, 0.1);
 
   font-size: 18px;
+
   font-weight: bold;
 }
 
 .taskbar-title {
   margin-left: 15px;
+
   font-size: 13px;
+
   letter-spacing: 2px;
 }
 
 .system-info {
   margin-left: auto;
+
   color: #888;
+
   font-size: 12px;
 }
 
@@ -178,20 +678,25 @@ body {
   left: 20%;
 
   width: 650px;
+
   max-width: 80vw;
 
   min-height: 400px;
 
-  background: rgba(20, 20, 20, 0.92);
+  background:
+    rgba(20, 20, 20, 0.92);
 
   backdrop-filter: blur(25px);
 
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.12);
 
   border-radius: 14px;
 
   box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.6);
+    0 30px 80px
+    rgba(0, 0, 0, 0.6);
 
   overflow: hidden;
 }
@@ -200,11 +705,14 @@ body {
   height: 48px;
 
   display: flex;
+
   align-items: center;
 
   padding: 0 18px;
 
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom:
+    1px solid
+    rgba(255, 255, 255, 0.08);
 
   font-size: 13px;
 }
@@ -216,9 +724,11 @@ body {
   height: 28px;
 
   border: none;
+
   border-radius: 50%;
 
-  background: rgba(255, 255, 255, 0.08);
+  background:
+    rgba(255, 255, 255, 0.08);
 
   color: white;
 
@@ -239,7 +749,9 @@ body {
 
 .projects-window {
   width: 750px;
+
   max-height: 75vh;
+
   overflow-y: auto;
 }
 
@@ -249,23 +761,30 @@ body {
 
 .section-label {
   font-size: 10px;
+
   letter-spacing: 3px;
+
   color: #777;
 }
 
 .projects-heading h2 {
   font-size: 28px;
+
   margin: 8px 0;
 }
 
 .projects-heading p {
   color: #777;
+
   font-size: 13px;
 }
 
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
   gap: 18px;
 }
 
@@ -276,11 +795,14 @@ body {
 
   min-height: 280px;
 
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.08);
 
   border-radius: 14px;
 
-  background: rgba(255, 255, 255, 0.025);
+  background:
+    rgba(255, 255, 255, 0.025);
 
   cursor: default;
 
@@ -290,7 +812,8 @@ body {
 }
 
 .project-card:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background:
+    rgba(255, 255, 255, 0.06);
 
   border-color:
     rgba(255, 255, 255, 0.18);
@@ -303,6 +826,7 @@ body {
   right: 20px;
 
   color: #555;
+
   font-size: 12px;
 }
 
@@ -318,6 +842,7 @@ body {
 
 .project-card h3 {
   font-size: 20px;
+
   margin-bottom: 12px;
 }
 
@@ -346,7 +871,8 @@ body {
 
   border-radius: 5px;
 
-  background: rgba(255, 255, 255, 0.07);
+  background:
+    rgba(255, 255, 255, 0.07);
 
   color: #aaa;
 
@@ -356,7 +882,9 @@ body {
 .github-button {
   padding: 9px 14px;
 
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.15);
 
   border-radius: 7px;
 
@@ -375,6 +903,7 @@ body {
 
 .github-button:hover {
   background: white;
+
   color: black;
 }
 
@@ -382,6 +911,7 @@ body {
 
 .about-window {
   width: 620px;
+
   max-width: 80vw;
 }
 
@@ -402,14 +932,18 @@ body {
   height: 75px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
   border-radius: 20px;
 
-  background: rgba(255, 255, 255, 0.08);
+  background:
+    rgba(255, 255, 255, 0.08);
 
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.1);
 
   font-size: 28px;
 
@@ -418,18 +952,21 @@ body {
 
 .about-top h2 {
   font-size: 28px;
+
   margin: 6px 0;
 }
 
 .about-role {
   color: #777;
+
   font-size: 13px;
 }
 
 .about-divider {
   height: 1px;
 
-  background: rgba(255, 255, 255, 0.08);
+  background:
+    rgba(255, 255, 255, 0.08);
 
   margin: 30px 0;
 }
@@ -464,7 +1001,8 @@ body {
 
   border-radius: 10px;
 
-  background: rgba(255, 255, 255, 0.04);
+  background:
+    rgba(255, 255, 255, 0.04);
 
   border:
     1px solid
@@ -515,6 +1053,7 @@ body {
 
 .skills-heading p {
   color: #777;
+
   font-size: 13px;
 }
 
@@ -562,6 +1101,7 @@ body {
 
 .skill-category-number {
   color: #555;
+
   font-size: 10px;
 }
 
@@ -611,6 +1151,7 @@ body {
 
 .skill-dot {
   color: #666;
+
   font-size: 10px;
 }
 
@@ -811,7 +1352,8 @@ body {
 }
 
 .resume-button:hover {
-  transform: translateY(-2px);
+  transform:
+    translateY(-2px);
 
   opacity: 0.85;
 }
@@ -838,11 +1380,13 @@ body {
 }
 
 .terminal-header {
-  background: rgba(255, 255, 255, 0.03);
+  background:
+    rgba(255, 255, 255, 0.03);
 }
 
 .terminal-body {
-  height: calc(100% - 48px);
+  height:
+    calc(100% - 48px);
 
   padding: 20px;
 
@@ -906,6 +1450,7 @@ body {
 @media (max-width: 700px) {
   .desktop-content {
     top: 20px;
+
     left: 15px;
 
     grid-template-columns:
@@ -920,6 +1465,7 @@ body {
 
   .desktop-icon {
     width: 80px;
+
     height: 85px;
   }
 
@@ -933,9 +1479,11 @@ body {
 
   .window {
     top: 5%;
+
     left: 5%;
 
     width: 90vw;
+
     max-width: 90vw;
 
     max-height: 85vh;
@@ -961,5 +1509,87 @@ body {
   .resume-actions {
     flex-wrap: wrap;
   }
-}
 
+  /* MOBILE REACTOR */
+
+  .arc-reactor {
+    width: 300px;
+    height: 300px;
+
+    opacity: 0.42;
+  }
+
+  .reactor-housing {
+    inset: 22px;
+  }
+
+  .outer-ring {
+    width: 230px;
+    height: 230px;
+
+    margin-left: -115px;
+    margin-top: -115px;
+  }
+
+  .outer-ring-2 {
+    width: 210px;
+    height: 210px;
+
+    margin-left: -105px;
+    margin-top: -105px;
+  }
+
+  .reactor-segments {
+    width: 188px;
+    height: 188px;
+
+    left: 56px;
+    top: 56px;
+  }
+
+  .inner-ring {
+    width: 158px;
+    height: 158px;
+
+    margin-left: -79px;
+    margin-top: -79px;
+  }
+
+  .reactor-plate {
+    width: 138px;
+    height: 138px;
+
+    left: 81px;
+    top: 81px;
+  }
+
+  .reactor-triangle {
+    width: 96px;
+    height: 96px;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+      translate(-50%, -50%);
+  }
+
+  .triangle-inner {
+    inset: 7px;
+  }
+
+  .triangle-light {
+    inset: 18px;
+  }
+
+  .reactor-center {
+    width: 30px;
+    height: 30px;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+      translate(-50%, -50%);
+  }
+}
