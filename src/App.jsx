@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -44,9 +43,9 @@ function App() {
   )
 }
 
-/* =========================
+/* =====================================================
    ARC REACTOR
-========================= */
+===================================================== */
 
 function ArcReactor() {
   return (
@@ -59,11 +58,8 @@ function ArcReactor() {
       </div>
 
       <div className="reactor-ring outer-ring"></div>
-
       <div className="reactor-ring outer-ring-2"></div>
-
       <div className="reactor-segments"></div>
-
       <div className="reactor-ring inner-ring"></div>
 
       <div className="reactor-plate">
@@ -87,9 +83,9 @@ function ArcReactor() {
   )
 }
 
-/* =========================
+/* =====================================================
    BOOT SCREEN
-========================= */
+===================================================== */
 
 function BootScreen({ messages, step }) {
   return (
@@ -104,34 +100,18 @@ function BootScreen({ messages, step }) {
       <div className="boot-content">
         <motion.h1
           className="boot-title"
-          initial={{
-            opacity: 0,
-            y: 10,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 1,
-            delay: 0.7,
-          }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.7 }}
         >
           KHAYYAM OS
         </motion.h1>
 
         <motion.p
           className="boot-subtitle"
-          initial={{
-            opacity: 0,
-          }}
-          animate={{
-            opacity: 1,
-          }}
-          transition={{
-            duration: 1,
-            delay: 1,
-          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 1 }}
         >
           PERSONAL OPERATING SYSTEM
         </motion.p>
@@ -160,147 +140,93 @@ function BootScreen({ messages, step }) {
   )
 }
 
-/* =========================
-   DESKTOP
-========================= */
+/* =====================================================
+   DRAGGABLE WINDOW
+===================================================== */
 
-function Desktop() {
-  const [aboutOpen, setAboutOpen] = useState(false)
-  const [projectsOpen, setProjectsOpen] = useState(false)
-  const [skillsOpen, setSkillsOpen] = useState(false)
-  const [resumeOpen, setResumeOpen] = useState(false)
-  const [terminalOpen, setTerminalOpen] = useState(false)
+function DraggableWindow({
+  children,
+  title,
+  onClose,
+  className = "",
+}) {
+  const [position, setPosition] = useState(null)
+  const [dragging, setDragging] = useState(false)
 
-  const [icons, setIcons] = useState([
-    {
-      id: "about",
-      name: "About Me",
-      icon: "👤",
-      x: 35,
-      y: 35,
-      action: () => setAboutOpen(true),
-    },
+  const dragOffset = useRef({
+    x: 0,
+    y: 0,
+  })
 
-    {
-      id: "linkedin",
-      name: "LinkedIn",
-      icon: "💼",
-      x: 135,
-      y: 35,
-      action: () =>
-        window.open(
-          "https://www.linkedin.com/in/khayyam-mehmood-691a7b350/",
-          "_blank"
-        ),
-    },
+  const windowRef = useRef(null)
 
-    {
-      id: "projects",
-      name: "Projects",
-      icon: "📁",
-      x: 35,
-      y: 145,
-      action: () => setProjectsOpen(true),
-    },
+  useEffect(() => {
+    const centerWindow = () => {
+      if (!windowRef.current) return
 
-    {
-      id: "skills",
-      name: "Skills",
-      icon: "⚙️",
-      x: 135,
-      y: 145,
-      action: () => setSkillsOpen(true),
-    },
+      const rect = windowRef.current.getBoundingClientRect()
 
-    {
-      id: "resume",
-      name: "Resume",
-      icon: "📄",
-      x: 35,
-      y: 255,
-      action: () => setResumeOpen(true),
-    },
+      const centerX =
+        (window.innerWidth - rect.width) / 2
 
-    {
-      id: "terminal",
-      name: "Terminal",
-      icon: "💻",
-      x: 135,
-      y: 255,
-      action: () => setTerminalOpen(true),
-    },
+      const centerY =
+        (window.innerHeight - rect.height) / 2
 
-    {
-      id: "github",
-      name: "GitHub",
-      icon: "🐙",
-      x: 35,
-      y: 365,
-      action: () =>
-        window.open(
-          "https://github.com/KhayyamMehmood",
-          "_blank"
-        ),
-    },
-  ])
-
-  const [dragging, setDragging] = useState(null)
-
-  const handleMouseDown = (event, id) => {
-    if (event.button !== 0) {
-      return
+      setPosition({
+        x: Math.max(10, centerX),
+        y: Math.max(45, centerY),
+      })
     }
 
-    const icon = icons.find((item) => item.id === id)
+    requestAnimationFrame(centerWindow)
 
-    if (!icon) {
-      return
+    window.addEventListener("resize", centerWindow)
+
+    return () => {
+      window.removeEventListener("resize", centerWindow)
     }
-
-    setDragging({
-      id,
-      offsetX: event.clientX - icon.x,
-      offsetY: event.clientY - icon.y,
-    })
-  }
+  }, [])
 
   useEffect(() => {
     const handleMouseMove = (event) => {
-      if (!dragging) {
-        return
-      }
+      if (!dragging) return
 
-      setIcons((previousIcons) =>
-        previousIcons.map((icon) => {
-          if (icon.id !== dragging.id) {
-            return icon
-          }
+      setPosition((previous) => {
+        if (!previous) return previous
 
-          return {
-            ...icon,
+        const width =
+          windowRef.current?.offsetWidth || 700
 
-            x: Math.max(
-              10,
-              Math.min(
-                event.clientX - dragging.offsetX,
-                window.innerWidth - 100
-              )
-            ),
+        const height =
+          windowRef.current?.offsetHeight || 500
 
-            y: Math.max(
-              10,
-              Math.min(
-                event.clientY - dragging.offsetY,
-                window.innerHeight - 130
-              )
-            ),
-          }
-        })
-      )
+        const maxX =
+          window.innerWidth - width - 10
+
+        const maxY =
+          window.innerHeight - height - 10
+
+        return {
+          x: Math.max(
+            10,
+            Math.min(
+              event.clientX - dragOffset.current.x,
+              maxX
+            )
+          ),
+          y: Math.max(
+            40,
+            Math.min(
+              event.clientY - dragOffset.current.y,
+              maxY
+            )
+          ),
+        }
+      })
     }
 
     const handleMouseUp = () => {
-      setDragging(null)
+      setDragging(false)
     }
 
     window.addEventListener("mousemove", handleMouseMove)
@@ -312,6 +238,278 @@ function Desktop() {
     }
   }, [dragging])
 
+  const handleHeaderMouseDown = (event) => {
+    if (event.button !== 0) return
+    if (!windowRef.current) return
+
+    const rect = windowRef.current.getBoundingClientRect()
+
+    dragOffset.current = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    }
+
+    setDragging(true)
+    event.preventDefault()
+  }
+
+  return (
+    <motion.div
+      ref={windowRef}
+      className={`window ${className}`}
+      initial={{
+        opacity: 0,
+        scale: 0.96,
+      }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+      }}
+      exit={{
+        opacity: 0,
+        scale: 0.96,
+      }}
+      style={{
+        position: "fixed",
+        left: position ? `${position.x}px` : "50%",
+        top: position ? `${position.y}px` : "50%",
+        transform: position
+          ? "none"
+          : "translate(-50%, -50%)",
+        margin: 0,
+        zIndex: 100,
+        cursor: dragging ? "grabbing" : "default",
+      }}
+    >
+      <div
+        className="window-header"
+        onMouseDown={handleHeaderMouseDown}
+        style={{
+          cursor: dragging ? "grabbing" : "grab",
+          userSelect: "none",
+        }}
+      >
+        <div className="traffic-lights">
+          <button
+            className="traffic red"
+            onMouseDown={(event) =>
+              event.stopPropagation()
+            }
+            onClick={onClose}
+          ></button>
+
+          <button
+            className="traffic yellow"
+            onMouseDown={(event) =>
+              event.stopPropagation()
+            }
+          ></button>
+
+          <button
+            className="traffic green"
+            onMouseDown={(event) =>
+              event.stopPropagation()
+            }
+          ></button>
+        </div>
+
+        <span className="window-title">{title}</span>
+
+        <div className="window-controls">
+          <span>−</span>
+          <span>□</span>
+          <span
+            onMouseDown={(event) =>
+              event.stopPropagation()
+            }
+            onClick={onClose}
+            style={{ cursor: "pointer" }}
+          >
+            ×
+          </span>
+        </div>
+      </div>
+
+      {children}
+    </motion.div>
+  )
+}
+
+/* =====================================================
+   DESKTOP
+===================================================== */
+
+function Desktop() {
+  const [aboutOpen, setAboutOpen] = useState(false)
+  const [projectsOpen, setProjectsOpen] = useState(false)
+  const [skillsOpen, setSkillsOpen] = useState(false)
+  const [resumeOpen, setResumeOpen] = useState(false)
+  const [terminalOpen, setTerminalOpen] = useState(false)
+  const [contactOpen, setContactOpen] = useState(false)
+
+  const [icons, setIcons] = useState([
+    {
+      id: "about",
+      name: "About Me",
+      icon: "◎",
+      x: 35,
+      y: 75,
+      action: () => setAboutOpen(true),
+    },
+    {
+      id: "linkedin",
+      name: "LinkedIn",
+      icon: "in",
+      x: 35,
+      y: 185,
+      action: () =>
+        window.open(
+          "https://www.linkedin.com/in/khayyam-mehmood-691a7b350/",
+          "_blank"
+        ),
+    },
+    {
+      id: "projects",
+      name: "Projects",
+      icon: "▣",
+      x: 35,
+      y: 295,
+      action: () => setProjectsOpen(true),
+    },
+    {
+      id: "skills",
+      name: "Skills",
+      icon: "⚙",
+      x: 35,
+      y: 405,
+      action: () => setSkillsOpen(true),
+    },
+    {
+      id: "resume",
+      name: "Resume",
+      icon: "▤",
+      x: 35,
+      y: 515,
+      action: () => setResumeOpen(true),
+    },
+    {
+      id: "terminal",
+      name: "Terminal",
+      icon: ">_",
+      x: 35,
+      y: 625,
+      action: () => setTerminalOpen(true),
+    },
+    {
+      id: "github",
+      name: "GitHub",
+      icon: "●",
+      x: 35,
+      y: 735,
+      action: () =>
+        window.open(
+          "https://github.com/KhayyamMehmood",
+          "_blank"
+        ),
+    },
+  ])
+
+  const [draggingIcon, setDraggingIcon] = useState(null)
+  const [iconMoved, setIconMoved] = useState(false)
+
+  const handleIconMouseDown = (event, id) => {
+    if (event.button !== 0) return
+
+    const icon = icons.find((item) => item.id === id)
+    if (!icon) return
+
+    setIconMoved(false)
+
+    setDraggingIcon({
+      id,
+      offsetX: event.clientX - icon.x,
+      offsetY: event.clientY - icon.y,
+      startX: event.clientX,
+      startY: event.clientY,
+    })
+
+    event.preventDefault()
+  }
+
+  useEffect(() => {
+    const handleMouseMove = (event) => {
+      if (!draggingIcon) return
+
+      const distanceX = Math.abs(
+        event.clientX - draggingIcon.startX
+      )
+
+      const distanceY = Math.abs(
+        event.clientY - draggingIcon.startY
+      )
+
+      if (distanceX > 5 || distanceY > 5) {
+        setIconMoved(true)
+      }
+
+      setIcons((previousIcons) =>
+        previousIcons.map((icon) => {
+          if (icon.id !== draggingIcon.id) {
+            return icon
+          }
+
+          const iconWidth = 90
+          const iconHeight = 90
+
+          const maxX =
+            window.innerWidth - iconWidth - 10
+
+          const maxY =
+            window.innerHeight - iconHeight - 80
+
+          return {
+            ...icon,
+            x: Math.max(
+              10,
+              Math.min(
+                event.clientX - draggingIcon.offsetX,
+                maxX
+              )
+            ),
+            y: Math.max(
+              45,
+              Math.min(
+                event.clientY - draggingIcon.offsetY,
+                maxY
+              )
+            ),
+          }
+        })
+      )
+    }
+
+    const handleMouseUp = () => {
+      setDraggingIcon(null)
+    }
+
+    window.addEventListener("mousemove", handleMouseMove)
+    window.addEventListener("mouseup", handleMouseUp)
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove)
+      window.removeEventListener("mouseup", handleMouseUp)
+    }
+  }, [draggingIcon])
+
+  const handleIconClick = (event, item) => {
+    if (iconMoved) return
+    item.action()
+  }
+
+  const toggleContact = () => {
+    setContactOpen((current) => !current)
+  }
+
   return (
     <motion.div
       className="desktop"
@@ -319,6 +517,23 @@ function Desktop() {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
+      <div className="top-menu">
+        <div className="menu-left">
+          <strong>KHAYYAM OS</strong>
+          <span>File</span>
+          <span>Edit</span>
+          <span>View</span>
+          <span>Help</span>
+        </div>
+
+        <div className="menu-right">
+          <span>⌁</span>
+          <span>🔊</span>
+          <span>Sun 6 Sep&nbsp; 10:36 PM</span>
+          <span className="online-dot"></span>
+        </div>
+      </div>
+
       {icons.map((item) => (
         <div
           key={item.id}
@@ -327,13 +542,23 @@ function Desktop() {
             position: "absolute",
             left: `${item.x}px`,
             top: `${item.y}px`,
+            cursor:
+              draggingIcon?.id === item.id
+                ? "grabbing"
+                : "pointer",
+            userSelect: "none",
           }}
           onMouseDown={(event) =>
-            handleMouseDown(event, item.id)
+            handleIconMouseDown(event, item.id)
           }
-          onClick={item.action}
+          onClick={(event) =>
+            handleIconClick(event, item)
+          }
         >
-          <div className="icon">
+          <div
+            className={`desktop-icon-box icon-${item.id}`}
+            aria-hidden="true"
+          >
             {item.icon}
           </div>
 
@@ -381,246 +606,233 @@ function Desktop() {
         )}
       </AnimatePresence>
 
-      <div className="taskbar">
-        <div className="start-button">
-          K
-        </div>
+      <div className="edit-label">Edit</div>
 
-        <div className="taskbar-title">
-          KHAYYAM OS
-        </div>
+      <div className="contact-wrapper">
+        <button
+          className="contact-button"
+          onClick={toggleContact}
+          aria-label="Open contact information"
+          title="Contact Me"
+        >
+          ☎
+        </button>
 
-        <div className="system-info">
-          Online • 2026
-        </div>
+        <AnimatePresence>
+          {contactOpen && (
+            <motion.div
+              className="contact-popup"
+              initial={{ opacity: 0, y: 12, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12, scale: 0.96 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="contact-popup-header">
+                <span>CONTACT.EXE</span>
+                <button
+                  onClick={() => setContactOpen(false)}
+                  aria-label="Close contact menu"
+                >
+                  ×
+                </button>
+              </div>
+
+              <a href="mailto:khayammehmood7@gmail.com">
+                <span>✉</span>
+                <div>
+                  <small>Email</small>
+                  khayammehmood7@gmail.com
+                </div>
+              </a>
+
+              <a href="tel:+92XXXXXXXXXX">
+                <span>☎</span>
+                <div>
+                  <small>Phone</small>
+                  +92 330 3480003
+                </div>
+              </a>
+
+              <a
+                href="https://www.instagram.com/_khayyam_m?stkn=YXI0dzVzNW15dnhx&utm_source=qr"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span>◎</span>
+                <div>
+                  <small>Instagram</small>
+                  Open Instagram
+                </div>
+              </a>
+
+              <a
+                href="https://github.com/KhayyamMehmood"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span>●</span>
+                <div>
+                  <small>GitHub</small>
+                  KhayyamMehmood
+                </div>
+              </a>
+
+              <a
+                href="https://www.linkedin.com/in/khayyam-mehmood-691a7b350/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span>in</span>
+                <div>
+                  <small>LinkedIn</small>
+                  Khayyam Mehmood
+                </div>
+              </a>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <div className="dock">
+        <div className="dock-icon">⠿</div>
+
+        {icons.map((item) => (
+          <button
+            key={item.id}
+            className={`dock-icon icon-${item.id}`}
+            onClick={item.action}
+            title={item.name}
+            aria-label={item.name}
+          >
+            {item.icon}
+          </button>
+        ))}
       </div>
     </motion.div>
   )
 }
 
-/* =========================
-   ABOUT
-========================= */
+/* =====================================================
+   ABOUT WINDOW
+===================================================== */
 
 function AboutWindow({ onClose }) {
   return (
-    <motion.div
-      className="window about-window"
-      initial={{
-        opacity: 0,
-        scale: 0.9,
-        y: 20,
-      }}
-      animate={{
-        opacity: 1,
-        scale: 1,
-        y: 0,
-      }}
-      exit={{
-        opacity: 0,
-        scale: 0.9,
-      }}
+    <DraggableWindow
+      title="About Me"
+      onClose={onClose}
+      className="about-window"
     >
-      <div className="window-header">
-        <span>About Me</span>
-
-        <button onClick={onClose}>
-          ×
-        </button>
-      </div>
-
       <div className="window-content about-content">
-        <div className="about-top">
-          <div className="profile-icon">
-            K
+        <div className="about-body">
+          <div className="about-photo-section">
+            <div className="profile-photo">
+              <img
+                src="/profile.png"
+                alt="Khayyam Mehmood"
+              />
+            </div>
+
+            <div className="quote">
+              <span>“</span>
+              <div>
+                Turning ideas into real-world solutions through code.
+                <div className="quote-name">— Khayyam Mehmood</div>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <span className="section-label">
-              USER PROFILE
-            </span>
+          <div className="about-info">
+            <div className="profile-label">PROFILE.EXE</div>
 
-            <h2>
-              Khayyam Mehmood
-            </h2>
+            <div className="online-status">
+              <span></span>
+              Online
+            </div>
 
-            <p className="about-role">
-              Computer Science Student
+            <h1>
+              Khayyam <strong>Mehmood</strong>
+            </h1>
+
+            <h3>FULL-STACK DEVELOPER</h3>
+
+            <p className="about-text">
+              I'm a passionate Full-Stack Developer who loves building modern
+              web applications and turning ideas into real-world solutions. I
+              enjoy working with technology, solving problems, and continuously
+              learning new things.
             </p>
-          </div>
-        </div>
 
-        <div className="about-divider" />
+            <div className="info-list">
+              <div><span>⌖</span>Pakistan</div>
+              <div><span>◆</span>BS Computer Science (In Progress)</div>
+              <div><span>✉</span>khayyammehmood7@gmail.com</div>
+              <div className="opportunity"><span>▣</span>Open to Opportunities</div>
+            </div>
 
-        <div className="about-description">
-          <p>
-            I'm a Computer Science student at Capital
-            University of Science & Technology with an
-            interest in software development and modern
-            web technologies.
-          </p>
+            <div className="about-divider" />
 
-          <p>
-            I've worked with technologies including
-            JavaScript, React, Node.js, Express, MongoDB,
-            MySQL, C++ and Python.
-          </p>
-
-          <p>
-            I'm focused on building real-world projects,
-            improving my development skills and growing as
-            a software developer.
-          </p>
-        </div>
-
-        <div className="about-stats">
-          <div className="about-stat">
-            <span>DEGREE</span>
-
-            <strong>
-              BS Computer Science
-            </strong>
-          </div>
-
-          <div className="about-stat">
-            <span>FOCUS</span>
-
-            <strong>
-              Software Development
-            </strong>
-          </div>
-
-          <div className="about-stat">
-            <span>STATUS</span>
-
-            <strong>
-              Open to Opportunities
-            </strong>
+            
           </div>
         </div>
       </div>
-    </motion.div>
+    </DraggableWindow>
   )
 }
 
-/* =========================
-   PROJECTS
-========================= */
+/* =====================================================
+   PROJECTS WINDOW
+===================================================== */
 
 function ProjectsWindow({ onClose }) {
   const projects = [
     {
       name: "Khaanakart",
-
       description:
         "A food delivery web application designed to provide a modern online ordering experience.",
-
       type: "Web Application",
-
-      technologies: [
-        "React",
-        "Vite",
-        "Tailwind CSS",
-      ],
-
-      github:
-        "https://github.com/KhayyamMehmood",
+      technologies: ["React", "Vite", "Tailwind CSS"],
+      github: "https://github.com/KhayyamMehmood",
     },
-
     {
       name: "Hayal Travel",
-
       description:
         "A travel and ticket booking web application built as a practical web development project.",
-
       type: "Web Application",
-
-      technologies: [
-        "React",
-        "JavaScript",
-        "Tailwind CSS",
-      ],
-
-      github:
-        "https://github.com/KhayyamMehmood",
+      technologies: ["React", "JavaScript", "Tailwind CSS"],
+      github: "https://github.com/KhayyamMehmood",
     },
-
     {
       name: "Home Care Services",
-
       description:
         "A real-world website developed for a home care service.",
-
       type: "Web Development",
-
-      technologies: [
-        "HTML",
-        "CSS",
-        "JavaScript",
-      ],
-
+      technologies: ["HTML", "CSS", "JavaScript"],
       github:
         "https://github.com/KhayyamMehmood/home-care-services",
     },
-
     {
       name: "Book Nest",
-
       description:
         "A book-focused website developed during internship practice.",
-
       type: "Web Development",
-
-      technologies: [
-        "HTML",
-        "CSS",
-        "JavaScript",
-      ],
-
+      technologies: ["HTML", "CSS", "JavaScript"],
       github:
         "https://github.com/KhayyamMehmood/book-nest",
     },
   ]
 
   return (
-    <motion.div
-      className="window projects-window"
-      initial={{
-        opacity: 0,
-        scale: 0.9,
-        y: 20,
-      }}
-      animate={{
-        opacity: 1,
-        scale: 1,
-        y: 0,
-      }}
-      exit={{
-        opacity: 0,
-        scale: 0.9,
-      }}
+    <DraggableWindow
+      title="Projects"
+      onClose={onClose}
+      className="projects-window"
     >
-      <div className="window-header">
-        <span>Projects</span>
-
-        <button onClick={onClose}>
-          ×
-        </button>
-      </div>
-
       <div className="window-content">
         <div className="projects-heading">
-          <span className="section-label">
-            PORTFOLIO
-          </span>
-
-          <h2>
-            Selected Projects
-          </h2>
-
-          <p>
-            A collection of things I've built.
-          </p>
+          <span className="section-label">PORTFOLIO</span>
+          <h2>Selected Projects</h2>
+          <p>A collection of things I've built.</p>
         </div>
 
         <div className="projects-grid">
@@ -628,20 +840,10 @@ function ProjectsWindow({ onClose }) {
             <motion.div
               className="project-card"
               key={project.name}
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                delay: index * 0.12,
-              }}
-              whileHover={{
-                y: -5,
-              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.12 }}
+              whileHover={{ y: -5 }}
             >
               <div className="project-number">
                 0{index + 1}
@@ -651,31 +853,19 @@ function ProjectsWindow({ onClose }) {
                 {project.type}
               </div>
 
-              <h3>
-                {project.name}
-              </h3>
-
-              <p>
-                {project.description}
-              </p>
+              <h3>{project.name}</h3>
+              <p>{project.description}</p>
 
               <div className="technologies">
-                {project.technologies.map(
-                  (tech) => (
-                    <span key={tech}>
-                      {tech}
-                    </span>
-                  )
-                )}
+                {project.technologies.map((tech) => (
+                  <span key={tech}>{tech}</span>
+                ))}
               </div>
 
               <button
                 className="github-button"
                 onClick={() =>
-                  window.open(
-                    project.github,
-                    "_blank"
-                  )
+                  window.open(project.github, "_blank")
                 }
               >
                 GitHub →
@@ -684,19 +874,18 @@ function ProjectsWindow({ onClose }) {
           ))}
         </div>
       </div>
-    </motion.div>
+    </DraggableWindow>
   )
 }
 
-/* =========================
-   SKILLS
-========================= */
+/* =====================================================
+   SKILLS WINDOW
+===================================================== */
 
 function SkillsWindow({ onClose }) {
   const skillCategories = [
     {
       name: "Frontend",
-
       skills: [
         "HTML",
         "CSS",
@@ -706,92 +895,41 @@ function SkillsWindow({ onClose }) {
         "Tailwind CSS",
       ],
     },
-
     {
       name: "Backend",
-
-      skills: [
-        "Node.js",
-        "Express.js",
-      ],
+      skills: ["Node.js", "Express.js"],
     },
-
     {
       name: "Databases",
-
-      skills: [
-        "MySQL",
-        "MongoDB",
-        "Firebase",
-      ],
+      skills: ["MySQL", "MongoDB", "Firebase"],
     },
-
     {
       name: "Languages",
-
-      skills: [
-        "JavaScript",
-        "C++",
-        "Python",
-      ],
+      skills: ["JavaScript", "C++", "Python"],
     },
-
     {
       name: "Tools",
-
-      skills: [
-        "Git",
-        "GitHub",
-        "Vite",
-        "Netlify",
-      ],
+      skills: ["Git", "GitHub", "Vite", "Netlify"],
     },
-
     {
       name: "Other",
-
-      skills: [
-        "Flutter",
-        "Dart",
-      ],
+      skills: ["Flutter", "Dart"],
     },
   ]
 
   return (
-    <motion.div
-      className="window skills-window"
-      initial={{
-        opacity: 0,
-        scale: 0.9,
-        y: 20,
-      }}
-      animate={{
-        opacity: 1,
-        scale: 1,
-        y: 0,
-      }}
-      exit={{
-        opacity: 0,
-        scale: 0.9,
-      }}
+    <DraggableWindow
+      title="Skills"
+      onClose={onClose}
+      className="skills-window"
     >
-      <div className="window-header">
-        <span>Skills</span>
-
-        <button onClick={onClose}>
-          ×
-        </button>
-      </div>
-
       <div className="window-content">
         <div className="skills-heading">
           <span className="section-label">
             TECHNICAL PROFILE
           </span>
 
-          <h2>
-            Skills & Technologies
-          </h2>
+          <h2>Skills & Technologies</h2>
 
           <p>
             Technologies and tools I've worked with.
@@ -804,27 +942,18 @@ function SkillsWindow({ onClose }) {
               <motion.div
                 className="skill-category"
                 key={category.name}
-                initial={{
-                  opacity: 0,
-                  y: 20,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{
-                  delay:
-                    categoryIndex * 0.08,
+                  delay: categoryIndex * 0.08,
                 }}
               >
                 <div className="skill-category-header">
-                  <span className="skill-category-number">
+                  <span>
                     0{categoryIndex + 1}
                   </span>
 
-                  <h3>
-                    {category.name}
-                  </h3>
+                  <h3>{category.name}</h3>
                 </div>
 
                 <div className="skill-list">
@@ -843,22 +972,12 @@ function SkillsWindow({ onClose }) {
                         }}
                         transition={{
                           delay:
-                            categoryIndex *
-                              0.08 +
-                            skillIndex *
-                              0.04,
-                        }}
-                        whileHover={{
-                          x: 4,
+                            categoryIndex * 0.08 +
+                            skillIndex * 0.04,
                         }}
                       >
-                        <span className="skill-dot">
-                          +
-                        </span>
-
-                        <span>
-                          {skill}
-                        </span>
+                        <span>+</span>
+                        <span>{skill}</span>
                       </motion.div>
                     )
                   )}
@@ -868,50 +987,26 @@ function SkillsWindow({ onClose }) {
           )}
         </div>
       </div>
-    </motion.div>
+    </DraggableWindow>
   )
 }
 
-/* =========================
-   RESUME
-========================= */
+/* =====================================================
+   RESUME WINDOW
+===================================================== */
 
 function ResumeWindow({ onClose }) {
   return (
-    <motion.div
-      className="window resume-window"
-      initial={{
-        opacity: 0,
-        scale: 0.9,
-        y: 20,
-      }}
-      animate={{
-        opacity: 1,
-        scale: 1,
-        y: 0,
-      }}
-      exit={{
-        opacity: 0,
-        scale: 0.9,
-      }}
+    <DraggableWindow
+      title="Resume"
+      onClose={onClose}
+      className="resume-window"
     >
-      <div className="window-header">
-        <span>Resume</span>
-
-        <button onClick={onClose}>
-          ×
-        </button>
-      </div>
-
       <div className="window-content resume-content">
         <div className="resume-heading">
-          <span className="section-label">
-            DOCUMENT
-          </span>
+          <span className="section-label">DOCUMENT</span>
 
-          <h2>
-            My Resume
-          </h2>
+          <h2>My Resume</h2>
 
           <p>
             A professional overview of my education,
@@ -923,29 +1018,16 @@ function ResumeWindow({ onClose }) {
           <div className="resume-paper">
             <div className="resume-paper-header">
               <div>
-                <h1>
-                  KHAYYAM MEHMOOD
-                </h1>
-
-                <p>
-                  Computer Science Student
-                </p>
+                <h1>KHAYYAM MEHMOOD</h1>
+                <p>Computer Science Student</p>
               </div>
 
-              <div className="resume-initial">
-                K
-              </div>
+              <div className="resume-initial">K</div>
             </div>
 
             <div className="resume-contact">
-              <span>
-                khayyammehmood7@gmail.com
-              </span>
-
-              <span>
-                github.com/KhayyamMehmood
-              </span>
-
+              <span>khayyammehmood7@gmail.com</span>
+              <span>github.com/KhayyamMehmood</span>
               <span>
                 linkedin.com/in/khayyam-mehmood-691a7b350
               </span>
@@ -954,30 +1036,23 @@ function ResumeWindow({ onClose }) {
             <div className="resume-line" />
 
             <div className="resume-section">
-              <h3>
-                PROFILE
-              </h3>
+              <h3>PROFILE</h3>
 
               <p>
                 Computer Science student at Capital
-                University of Science & Technology
-                with hands-on experience developing
-                web applications using modern frontend
-                and backend technologies. Interested in
-                software development, problem solving
-                and building practical digital products.
+                University of Science & Technology with
+                hands-on experience developing web
+                applications using modern frontend and
+                backend technologies.
               </p>
             </div>
 
             <div className="resume-section">
-              <h3>
-                EDUCATION
-              </h3>
+              <h3>EDUCATION</h3>
 
               <div className="resume-entry">
                 <strong>
-                  Bachelor of Science in Computer
-                  Science
+                  Bachelor of Science in Computer Science
                 </strong>
 
                 <p>
@@ -988,79 +1063,49 @@ function ResumeWindow({ onClose }) {
             </div>
 
             <div className="resume-section">
-              <h3>
-                TECHNICAL SKILLS
-              </h3>
+              <h3>TECHNICAL SKILLS</h3>
 
               <p>
-                JavaScript • React • HTML • CSS •
-                Tailwind CSS • Bootstrap • Node.js •
-                Express.js • MySQL • MongoDB • Firebase
-                • C++ • Python • Git • GitHub • Vite •
-                Flutter • Dart
+                JavaScript • React • HTML • CSS • Tailwind
+                CSS • Bootstrap • Node.js • Express.js •
+                MySQL • MongoDB • Firebase • C++ • Python
+                • Git • GitHub • Vite • Flutter • Dart
               </p>
             </div>
 
             <div className="resume-section">
-              <h3>
-                PROJECTS
-              </h3>
+              <h3>PROJECTS</h3>
 
               <div className="resume-entry">
-                <strong>
-                  Khaanakart
-                </strong>
-
+                <strong>Khaanakart</strong>
                 <p>
                   Food delivery web application focused
-                  on providing a modern online ordering
-                  experience.
+                  on providing a modern ordering experience.
                 </p>
               </div>
 
               <div className="resume-entry">
-                <strong>
-                  Hayal Travel
-                </strong>
-
+                <strong>Hayal Travel</strong>
                 <p>
-                  Travel and ticket booking web
-                  application built as a practical
-                  development project.
+                  Travel and ticket booking web application.
                 </p>
               </div>
 
               <div className="resume-entry">
-                <strong>
-                  Home Care Services
-                </strong>
-
+                <strong>Home Care Services</strong>
                 <p>
-                  Real-world website developed for a
-                  home care service.
+                  Real-world website developed for a home
+                  care service.
                 </p>
               </div>
 
               <div className="resume-entry">
-                <strong>
-                  Book Nest
-                </strong>
-
+                <strong>Book Nest</strong>
                 <p>
                   Book-focused website developed during
                   internship practice.
                 </p>
               </div>
-            </div>
-
-            <div className="resume-section">
-              <h3>
-                GITHUB
-              </h3>
-
-              <p>
-                github.com/KhayyamMehmood
-              </p>
             </div>
           </div>
         </div>
@@ -1103,19 +1148,18 @@ function ResumeWindow({ onClose }) {
           </button>
         </div>
       </div>
-    </motion.div>
+    </DraggableWindow>
   )
 }
 
-/* =========================
-   TERMINAL
-========================= */
+/* =====================================================
+   TERMINAL WINDOW
+===================================================== */
 
 function TerminalWindow({ onClose }) {
   const [history, setHistory] = useState([
     {
       type: "output",
-
       text: [
         "KHAYYAM OS Terminal v1.0",
         "Type 'help' to see available commands.",
@@ -1124,7 +1168,6 @@ function TerminalWindow({ onClose }) {
   ])
 
   const [input, setInput] = useState("")
-
   const inputRef = useRef(null)
 
   useEffect(() => {
@@ -1183,13 +1226,6 @@ function TerminalWindow({ onClose }) {
     ],
 
     neofetch: [
-      "██╗  ██╗ █████╗ ██╗   ██╗██╗   ██╗ █████╗ ███╗   ███╗",
-      "██║ ██╔╝██╔══██╗╚██╗ ██╔╝╚██╗ ██╔╝██╔══██╗████╗ ████║",
-      "█████╔╝ ███████║ ╚████╔╝  ╚████╔╝ ███████║██╔████╔██║",
-      "██╔═██╗ ██╔══██║  ╚██╔╝    ╚██╔╝  ██╔══██║██║╚██╔╝██║",
-      "██║  ██╗██║  ██║   ██║      ██║   ██║  ██║██║ ╚═╝ ██║",
-      "╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚═╝  ╚═╝╚═╝     ╚═╝",
-      "",
       "OS:        KHAYYAM OS",
       "User:      Khayyam Mehmood",
       "Shell:     KHAYYAM Terminal",
@@ -1202,30 +1238,19 @@ function TerminalWindow({ onClose }) {
       "Status:    Open to Opportunities",
     ],
 
-    github: [
-      "Opening GitHub...",
-    ],
-
-    linkedin: [
-      "Opening LinkedIn...",
-    ],
-
-    email: [
-      "Opening email client...",
-    ],
+    github: ["Opening GitHub..."],
+    linkedin: ["Opening LinkedIn..."],
+    email: ["Opening email client..."],
   }
 
   const handleCommand = (event) => {
-    if (event.key !== "Enter") {
-      return
-    }
+    if (event.key !== "Enter") return
 
     const command = input.trim().toLowerCase()
 
     if (!command) {
       setHistory((previous) => [
         ...previous,
-
         {
           type: "command",
           text: "",
@@ -1233,18 +1258,14 @@ function TerminalWindow({ onClose }) {
       ])
 
       setInput("")
-
       return
     }
 
     if (command === "clear") {
       setHistory([])
       setInput("")
-
       return
     }
-
-    const output = commands[command]
 
     if (command === "github") {
       window.open(
@@ -1267,17 +1288,16 @@ function TerminalWindow({ onClose }) {
       )
     }
 
+    const output = commands[command]
+
     setHistory((previous) => [
       ...previous,
-
       {
         type: "command",
         text: command,
       },
-
       {
         type: "output",
-
         text:
           output || [
             `Command not found: ${command}`,
@@ -1290,37 +1310,15 @@ function TerminalWindow({ onClose }) {
   }
 
   return (
-    <motion.div
-      className="window terminal-window"
-      initial={{
-        opacity: 0,
-        scale: 0.9,
-        y: 20,
-      }}
-      animate={{
-        opacity: 1,
-        scale: 1,
-        y: 0,
-      }}
-      exit={{
-        opacity: 0,
-        scale: 0.9,
-      }}
-      onClick={() =>
-        inputRef.current?.focus()
-      }
+    <DraggableWindow
+      title="Terminal"
+      onClose={onClose}
+      className="terminal-window"
     >
-      <div className="window-header terminal-header">
-        <span>
-          Terminal
-        </span>
-
-        <button onClick={onClose}>
-          ×
-        </button>
-      </div>
-
-      <div className="terminal-body">
+      <div
+        className="terminal-body"
+        onClick={() => inputRef.current?.focus()}
+      >
         {history.map((item, index) => (
           <div
             key={index}
@@ -1342,13 +1340,11 @@ function TerminalWindow({ onClose }) {
                 {item.text}
               </span>
             ) : (
-              item.text.map(
-                (line, lineIndex) => (
-                  <div key={lineIndex}>
-                    {line || "\u00A0"}
-                  </div>
-                )
-              )
+              item.text.map((line, lineIndex) => (
+                <div key={lineIndex}>
+                  {line || "\u00A0"}
+                </div>
+              ))
             )}
           </div>
         ))}
@@ -1371,9 +1367,8 @@ function TerminalWindow({ onClose }) {
           />
         </div>
       </div>
-    </motion.div>
+    </DraggableWindow>
   )
 }
 
 export default App
-
