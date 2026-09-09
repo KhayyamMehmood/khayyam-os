@@ -820,8 +820,24 @@ function ProjectsWindow({ onClose }) {
       github:
         "https://github.com/KhayyamMehmood/book-nest",
     },
-  ]
-
+    {
+      name: "The Daily Plate",
+      description:
+        "A full-stack restaurant menu management application with an admin panel for adding, deleting, and managing food items, uploading images, and filtering menu categories.",
+      type: "Full-Stack Web Application",
+      technologies: [
+        "React",
+        "Vite",
+        "Node.js",
+        "Express.js",
+        "MongoDB",
+        "Mongoose",
+        "Multer",
+      ],
+      github:
+        "https://github.com/KhayyamMehmood/the-daily-plate",
+    },
+  ];
   return (
     <DraggableWindow
       title="Projects"
