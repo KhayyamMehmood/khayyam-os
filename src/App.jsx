@@ -419,8 +419,8 @@ function Desktop() {
       action: () => setSkillsOpen(true),
     },
     {
-      id: "resume",
-      name: "Resume",
+      id: "CV",
+      name: "CV",
       icon: "▤",
       x: 35,
       y: 515,
@@ -543,7 +543,7 @@ function Desktop() {
         <div className="menu-right">
           <span>⌁</span>
           <span>🔊</span>
-          <span>Sun 6 Sep&nbsp; 10:36 PM</span>
+          <span>Sat 7 Feb&nbsp; 1:29 PM</span>
           <span className="online-dot"></span>
         </div>
       </div>
@@ -934,7 +934,7 @@ function SkillsWindow({ onClose }) {
     },
     {
       name: "Databases",
-      skills: ["MySQL", "MongoDB", "Firebase"],
+      skills: ["MySQL", "MongoDB"],
     },
     {
       name: "Languages",
@@ -1031,154 +1031,19 @@ function SkillsWindow({ onClose }) {
 function ResumeWindow({ onClose }) {
   return (
     <DraggableWindow
-      title="Resume"
+      title="CV"
       onClose={onClose}
       className="resume-window"
     >
       <div className="window-content resume-content">
-        <div className="resume-heading">
-          <span className="section-label">DOCUMENT</span>
-
-          <h2>My Resume</h2>
-
-          <p>
-            A professional overview of my education,
-            technical skills and development projects.
-          </p>
-        </div>
+        
 
         <div className="resume-preview">
-          <div className="resume-paper">
-            <div className="resume-paper-header">
-              <div>
-                <h1>KHAYYAM MEHMOOD</h1>
-                <p>Computer Science Student</p>
-              </div>
-
-              <div className="resume-initial">K</div>
-            </div>
-
-            <div className="resume-contact">
-              <span>khayyammehmood7@gmail.com</span>
-              <span>github.com/KhayyamMehmood</span>
-              <span>
-                linkedin.com/in/khayyam-mehmood-691a7b350
-              </span>
-            </div>
-
-            <div className="resume-line" />
-
-            <div className="resume-section">
-              <h3>PROFILE</h3>
-
-              <p>
-                Computer Science student at Capital
-                University of Science & Technology with
-                hands-on experience developing web
-                applications using modern frontend and
-                backend technologies.
-              </p>
-            </div>
-
-            <div className="resume-section">
-              <h3>EDUCATION</h3>
-
-              <div className="resume-entry">
-                <strong>
-                  Bachelor of Science in Computer Science
-                </strong>
-
-                <p>
-                  Capital University of Science &
-                  Technology
-                </p>
-              </div>
-            </div>
-
-            <div className="resume-section">
-              <h3>TECHNICAL SKILLS</h3>
-
-              <p>
-                JavaScript • React • HTML • CSS • Tailwind
-                CSS • Bootstrap • Node.js • Express.js •
-                MySQL • MongoDB • Firebase • C++ • Python
-                • Git • GitHub • Vite • Flutter • Dart
-              </p>
-            </div>
-
-            <div className="resume-section">
-              <h3>PROJECTS</h3>
-
-              <div className="resume-entry">
-                <strong>Khaanakart</strong>
-                <p>
-                  Food delivery web application focused
-                  on providing a modern ordering experience.
-                </p>
-              </div>
-
-              <div className="resume-entry">
-                <strong>Hayal Travel</strong>
-                <p>
-                  Travel and ticket booking web application.
-                </p>
-              </div>
-
-              <div className="resume-entry">
-                <strong>Home Care Services</strong>
-                <p>
-                  Real-world website developed for a home
-                  care service.
-                </p>
-              </div>
-
-              <div className="resume-entry">
-                <strong>Book Nest</strong>
-                <p>
-                  Book-focused website developed during
-                  internship practice.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="resume-actions">
-          <button
-            className="resume-button"
-            onClick={() =>
-              window.open(
-                "https://github.com/KhayyamMehmood",
-                "_blank"
-              )
-            }
-          >
-            GitHub →
-          </button>
-
-          <button
-            className="resume-button secondary"
-            onClick={() =>
-              window.open(
-                "https://www.linkedin.com/in/khayyam-mehmood-691a7b350/",
-                "_blank"
-              )
-            }
-          >
-            LinkedIn →
-          </button>
-
-          <button
-            className="resume-button secondary"
-            onClick={() =>
-              window.open(
-                "mailto:khayyammehmood7@gmail.com",
-                "_blank"
-              )
-            }
-          >
-            Email →
-          </button>
+          <img
+            src="/cvv.png"
+            alt="Khayyam Mehmood CV"
+            className="cv-image"
+          />
         </div>
       </div>
     </DraggableWindow>

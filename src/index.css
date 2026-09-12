@@ -865,37 +865,33 @@ input {
 ========================================================= */
 
 .dock {
-  position: absolute;
 
-  bottom: 14px;
-  left: 50%;
-
-  transform: translateX(-50%);
-
-  height: 62px;
-
-  padding: 7px 10px;
-
-  display: flex;
-  align-items: center;
-
-  gap: 5px;
-
-  background: rgba(4, 15, 25, 0.82);
-
-  border: 1px solid rgba(81, 143, 181, 0.35);
-
-  border-radius: 13px;
-
-  box-shadow:
-    0 12px 35px rgba(0, 0, 0, 0.5),
-    inset 0 0 20px rgba(51, 133, 180, 0.06);
-
-  backdrop-filter: blur(20px);
-
-  z-index: 900;
-}
-
+  
+    position: fixed;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  
+    padding: 14px;
+  
+    background: rgba(3, 18, 28, 0.88);
+    border: 1px solid rgba(60, 180, 240, 0.35);
+    border-radius: 24px;
+  
+    box-shadow:
+      0 20px 50px rgba(0, 0, 0, 0.45),
+      inset 0 0 20px rgba(50, 170, 230, 0.05);
+  
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  
+    z-index: 1000;
+  }
 .dock-icon {
   width: 46px;
   height: 46px;
@@ -1474,24 +1470,29 @@ input {
 /* Contact button and popup */
 .contact-wrapper {
   position: fixed;
-  right: 34px;
-  bottom: 34px;
+  left: 50%;
+  bottom: 28px;
+  right: auto;
   z-index: 1000;
+  transform: translateX(-50%);
 }
 
 .contact-button {
-  width: 108px;
-  height: 108px;
-  border: 1px solid rgba(80, 180, 255, 0.35);
-  border-radius: 50%;
-  background: rgba(4, 16, 29, 0.94);
-  color: #8fcfff;
-  font-size: 38px;
+  width: 500px;
+  height: 40px;
+  border: 3px solid rgba(80, 89, 255, 0.918);
+  border-radius: 20px;
+  background: transparent;
+  color: #aaff00f9;
+  font-size: 40px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 25px rgba(0, 130, 255, 0.12), inset 0 0 20px rgba(80, 180, 255, 0.04);
+  gap: 10px;
+  box-shadow:
+    0 0 25px rgba(0, 130, 255, 0.12),
+    inset 0 0 20px rgba(80, 180, 255, 0.04);
   transition: 0.25s ease;
 }
 
@@ -1499,13 +1500,17 @@ input {
   transform: scale(1.06);
   color: white;
   border-color: #42b8ff;
-  box-shadow: 0 0 30px rgba(0, 150, 255, 0.3), inset 0 0 20px rgba(80, 180, 255, 0.08);
+  box-shadow:
+    0 0 30px rgba(0, 150, 255, 0.3),
+    inset 0 0 20px rgba(80, 180, 255, 0.08);
 }
 
 .contact-popup {
   position: absolute;
-  right: 0;
-  bottom: 126px;
+  left: 50%;
+  right: auto;
+  bottom: 82px;
+  transform: translateX(-50%);
   width: 320px;
   padding: 18px;
   border: 1px solid rgba(80, 180, 255, 0.3);
@@ -1573,19 +1578,192 @@ input {
 
 @media (max-width: 600px) {
   .contact-wrapper {
-    right: 18px;
+    left: 50%;
+    right: auto;
     bottom: 18px;
+    transform: translateX(-50%);
   }
 
   .contact-button {
-    width: 70px;
-    height: 70px;
+    width: 150px;
+    height: 60px;
     font-size: 27px;
   }
 
   .contact-popup {
-    right: 0;
-    bottom: 85px;
+    left: 50%;
+    right: auto;
+    bottom: 70px;
+    transform: translateX(-50%);
     width: min(300px, calc(100vw - 36px));
   }
 }
+
+/* =========================================================
+   CV WINDOW - FINAL SIZE
+========================================================= */
+
+.resume-window {
+  width: 900px;
+  height: 820px;
+  max-width: 92vw;
+  max-height: 86vh;
+}
+
+.resume-content {
+  height: calc(100% - 50px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.resume-heading {
+  flex-shrink: 0;
+  margin-bottom: 10px;
+}
+
+.resume-heading h2 {
+  margin: 5px 0;
+  font-size: 24px;
+}
+
+.resume-heading p {
+  margin: 0;
+  font-size: 12px;
+}
+
+/* =========================================================
+   CV WINDOW - CLEAN FINAL VERSION
+========================================================= */
+
+.resume-window {
+  width: 1000px;
+  max-width: 90vw;
+  height: 850px;
+  max-height: 88vh;
+}
+
+.resume-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.resume-heading {
+  flex-shrink: 0;
+  margin-bottom: 12px;
+}
+
+.resume-heading h2 {
+  margin: 5px 0;
+  font-size: 24px;
+}
+
+.resume-heading p {
+  margin: 0;
+  font-size: 12px;
+}
+
+.resume-preview {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.resume-preview img {
+  display: block;
+  width: auto;
+  height: 88vh;
+  max-width: 90%;
+  max-height: 88vh;
+  object-fit: contain;
+}
+
+.resume-window {
+  width: 1100px;
+  height: 900px;
+  max-width: 95vw;
+  max-height: 92vh;
+}
+
+.resume-content {
+  height: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.resume-preview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.resume-preview img {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+}
+/* =========================================================
+   FINAL CV DISPLAY
+   ========================================================= */
+
+   .resume-window {
+    width: min(1100px, 92vw) !important;
+    height: min(850px, 90vh) !important;
+    max-height: 90vh !important;
+  }
+  
+  .resume-window .window-content {
+    height: calc(100% - 50px) !important;
+    max-height: none !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+  
+  .resume-window .resume-heading {
+    display: none !important;
+  }
+  
+  .resume-preview {
+    width: 100% !important;
+    height: 100% !important;
+  
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  
+    padding: 18px !important;
+    margin: 0 !important;
+  
+    background: #020b13 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+  
+  .resume-preview .cv-image {
+    display: block !important;
+  
+    width: auto !important;
+    height: auto !important;
+  
+    max-width: 100% !important;
+    max-height: 100% !important;
+  
+    object-fit: contain !important;
+    object-position: center !important;
+  
+    margin: 0 auto !important;
+  }
